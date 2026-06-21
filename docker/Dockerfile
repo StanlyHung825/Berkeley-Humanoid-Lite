@@ -1,21 +1,31 @@
-ARG ISAACLAB_BASE_IMAGE_ARG
+ARG ISAACSIM_BASE_IMAGE=nvcr.io/nvidia/isaac-sim:5.1.0
+ARG UV_VERSION=0.8.15
 
-# we use the basic isaaclab image as the base
-FROM ${ISAACLAB_BASE_IMAGE_ARG} AS base
-
-ARG DOCKER_ISAACLAB_EXTENSION_TEMPLATE_PATH_ARG
-ENV DOCKER_ISAACLAB_EXTENSION_TEMPLATE_PATH=${DOCKER_ISAACLAB_EXTENSION_TEMPLATE_PATH_ARG}
+FROM ghcr.io/astral-sh/uv:${UV_VERSION} AS uv
+FROM ${ISAACSIM_BASE_IMAGE}
 
 USER root
 
-# Copy the Isaac Lab Extension Template directory (files to exclude are defined in .dockerignore)
-COPY ../ ${DOCKER_ISAACLAB_EXTENSION_TEMPLATE_PATH}
+COPY --from=uv /uv /uvx /usr/local/bin/
 
-# # Install whatever you need as additional dependencies.
-RUN bash -i -c "source ${HOME}/.bashrc && \
-    cd ${DOCKER_ISAACLAB_EXTENSION_TEMPLATE_PATH}/source/berkeley_humanoid_lite && \
-    pip install -e ."
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends git python3-pip sudo \
+    && rm -rf /var/lib/apt/lists/* \
+    && groupadd --gid 992 render \
+    && printf 'ubuntu ALL=(ALL) NOPASSWD:ALL\n' > /etc/sudoers.d/ubuntu \
+    && chmod 0440 /etc/sudoers.d/ubuntu \
+    && printf '\nforce_color_prompt=yes\nPS1="\\[\\033[01;32m\\]\\u@\\h\\[\\033[00m\\]:\\[\\033[01;34m\\]\\w\\[\\033[00m\\]\\$ "\n' >> /home/ubuntu/.bashrc \
+    && mkdir -p /home/ubuntu/.cache \
+    && chown -R ubuntu:ubuntu /home/ubuntu
 
-# make working directory as the Isaac Lab directory
-# this is the default directory when the container is run
+ENV HOME=/home/ubuntu \
+    TERM=xterm-256color \
+    COLORTERM=truecolor \
+    FORCE_COLOR=1 \
+    UV_LINK_MODE=copy
+
+USER ubuntu
 WORKDIR /workspace
+
+ENTRYPOINT []
+CMD ["bash", "-l"]

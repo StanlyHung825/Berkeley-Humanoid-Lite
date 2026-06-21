@@ -316,6 +316,7 @@ dependencies = [
     { name = "pin", marker = "platform_machine == 'x86_64' and sys_platform == 'linux'" },
     { name = "pin-pink", marker = "platform_machine == 'x86_64' and sys_platform == 'linux'" },
     { name = "pyaml", marker = "platform_machine == 'x86_64' and sys_platform == 'linux'" },
+    { name = "python-can", marker = "platform_machine == 'x86_64' and sys_platform == 'linux'" },
     { name = "qpsolvers", extra = ["quadprog"], marker = "platform_machine == 'x86_64' and sys_platform == 'linux'" },
     { name = "scipy", marker = "platform_machine == 'x86_64' and sys_platform == 'linux'" },
     { name = "torch", marker = "platform_machine == 'x86_64' and sys_platform == 'linux'" },
@@ -342,6 +343,7 @@ requires-dist = [
     { name = "pin" },
     { name = "pin-pink" },
     { name = "pyaml" },
+    { name = "python-can", specifier = ">=4.2.2" },
     { name = "qpsolvers", extras = ["quadprog"] },
     { name = "scipy" },
     { name = "torch", specifier = "==2.7.0", index = "https://download.pytorch.org/whl/cu128" },
@@ -1119,7 +1121,7 @@ dependencies = [
     { name = "warp-lang", marker = "platform_machine == 'x86_64' and sys_platform == 'linux'" },
 ]
 wheels = [
-    { url = "https://pypi.nvidia.cn/isaaclab/isaaclab-2.3.2.post1-cp311-none-manylinux_2_35_x86_64.whl", hash = "sha256:53f085b5c8377697d52cb404fb6ca0902771983f790f0839a13709a67cea1919" },
+    { url = "https://pypi.nvidia.com/isaaclab/isaaclab-2.3.2.post1-cp311-none-manylinux_2_35_x86_64.whl", hash = "sha256:53f085b5c8377697d52cb404fb6ca0902771983f790f0839a13709a67cea1919" },
 ]
 
 [package.optional-dependencies]
@@ -1143,7 +1145,7 @@ dependencies = [
     { name = "isaacsim-kernel", marker = "platform_machine == 'x86_64' and sys_platform == 'linux'" },
 ]
 wheels = [
-    { url = "https://pypi.nvidia.cn/isaacsim/isaacsim-5.1.0.0-cp311-none-manylinux_2_35_x86_64.whl", hash = "sha256:ad2c027831ed5d4a62552735bb799dea4e4604530d2ab9b526ddb6cd19a98c11" },
+    { url = "https://pypi.nvidia.com/isaacsim/isaacsim-5.1.0.0-cp311-none-manylinux_2_35_x86_64.whl", hash = "sha256:ad2c027831ed5d4a62552735bb799dea4e4604530d2ab9b526ddb6cd19a98c11" },
 ]
 
 [package.optional-dependencies]
@@ -1270,7 +1272,7 @@ dependencies = [
     { name = "trimesh", marker = "platform_machine == 'x86_64' and sys_platform == 'linux'" },
 ]
 wheels = [
-    { url = "https://pypi.nvidia.cn/isaacsim-core/isaacsim_core-5.1.0.0-cp311-none-manylinux_2_35_x86_64.whl", hash = "sha256:cfdd5d82ce455d654c68d37ff4fdd062190e3414289beb6f9b876a10a851b92d" },
+    { url = "https://pypi.nvidia.com/isaacsim-core/isaacsim_core-5.1.0.0-cp311-none-manylinux_2_35_x86_64.whl", hash = "sha256:cfdd5d82ce455d654c68d37ff4fdd062190e3414289beb6f9b876a10a851b92d" },
 ]
 
 [[package]]
@@ -1732,6 +1734,16 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/33/5e/2e23593c67df0b21ffb141c485ca0ae955569203d7ff5064040af968cb81/msal-extensions-1.0.0.tar.gz", hash = "sha256:c676aba56b0cce3783de1b5c5ecfe828db998167875126ca4b47dc6436451354", size = 18763, upload-time = "2022-02-14T23:45:54.069Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/52/34/a8995d6f0fa626ff6b28dbd9c90f6c2a46bd484bc7ab343d078b0c6ff1a7/msal_extensions-1.0.0-py2.py3-none-any.whl", hash = "sha256:91e3db9620b822d0ed2b4d1850056a0f133cba04455e62f11612e40f5502f2ee", size = 19181, upload-time = "2022-02-14T23:45:53.061Z" },
+]
+
+[[package]]
+name = "msgpack"
+version = "1.0.8"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/08/4c/17adf86a8fbb02c144c7569dc4919483c01a2ac270307e2d59e1ce394087/msgpack-1.0.8.tar.gz", hash = "sha256:95c02b0e27e706e48d0e5426d1710ca78e0f0628d6e89d5b5a5b91a5f12274f3", size = 167014, upload-time = "2024-03-02T01:19:21.299Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/f6/f0/a7bdb48223cd21b9abed814b08fca8fe6a40931e70ec97c24d2f15d68ef3/msgpack-1.0.8-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:83b5c044f3eff2a6534768ccfd50425939e7a8b5cf9a7261c385de1e20dcfc85", size = 409267, upload-time = "2024-03-01T12:35:29.888Z" },
+    { url = "https://files.pythonhosted.org/packages/dd/06/adb6c8cdea18f9ba09b7dc1442b50ce222858ae4a85703420349784429d0/msgpack-1.0.8-cp311-cp311-musllinux_1_1_x86_64.whl", hash = "sha256:e2f879ab92ce502a1e65fce390eab619774dda6a6ff719718069ac94084098ce", size = 409109, upload-time = "2024-03-01T12:35:38.839Z" },
 ]
 
 [[package]]
@@ -2469,6 +2481,22 @@ wheels = [
 ]
 
 [[package]]
+name = "python-can"
+version = "4.2.2"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "msgpack", marker = "platform_machine == 'x86_64' and sys_platform == 'linux'" },
+    { name = "packaging", marker = "platform_machine == 'x86_64' and sys_platform == 'linux'" },
+    { name = "setuptools", marker = "platform_machine == 'x86_64' and sys_platform == 'linux'" },
+    { name = "typing-extensions", marker = "platform_machine == 'x86_64' and sys_platform == 'linux'" },
+    { name = "wrapt", marker = "platform_machine == 'x86_64' and sys_platform == 'linux'" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/dd/f1/327caaf05b6bca594250053058a2adac537a88dfb5c41bb5498cfda9de78/python-can-4.2.2.tar.gz", hash = "sha256:6ad50f4613289f3c4d276b6d2ac8901d776dcb929994cce93f55a69e858c595f", size = 332677, upload-time = "2023-06-18T15:07:47.514Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/a1/8a/c8228e4a54e9f64882a514b7eb39787e4d425a1f0b41908f0c0cd86e8d50/python_can-4.2.2-py3-none-any.whl", hash = "sha256:7eea9b81b0ff908000a825db024313f622895bd578e8a17433e0474cd7d2da83", size = 257040, upload-time = "2023-06-18T15:07:45.704Z" },
+]
+
+[[package]]
 name = "python-dateutil"
 version = "2.9.0.post0"
 source = { registry = "https://pypi.org/simple" }
@@ -2938,7 +2966,7 @@ dependencies = [
     { name = "typing-extensions", marker = "platform_machine == 'x86_64' and sys_platform == 'linux'" },
 ]
 wheels = [
-    { url = "https://download.pytorch.org/whl/cu128/torch-2.7.0%2Bcu128-cp311-cp311-manylinux_2_28_x86_64.whl", hash = "sha256:c4bbc0b4be60319ba1cefc90be9557b317f0b3c261eeceb96ca6e0343eec56bf" },
+    { url = "https://download-r2.pytorch.org/whl/cu128/torch-2.7.0%2Bcu128-cp311-cp311-manylinux_2_28_x86_64.whl", hash = "sha256:c4bbc0b4be60319ba1cefc90be9557b317f0b3c261eeceb96ca6e0343eec56bf", upload-time = "2025-04-22T18:20:00Z" },
 ]
 
 [[package]]
@@ -2962,7 +2990,7 @@ dependencies = [
     { name = "torch", marker = "platform_machine == 'x86_64' and sys_platform == 'linux'" },
 ]
 wheels = [
-    { url = "https://download.pytorch.org/whl/cu128/torchvision-0.22.0%2Bcu128-cp311-cp311-manylinux_2_28_x86_64.whl", hash = "sha256:f3ac527d58b4c2043eb8d9e29fc56cd1751f36f2aaa6dc75e34ec54c951bcb9c" },
+    { url = "https://download-r2.pytorch.org/whl/cu128/torchvision-0.22.0%2Bcu128-cp311-cp311-manylinux_2_28_x86_64.whl", hash = "sha256:f3ac527d58b4c2043eb8d9e29fc56cd1751f36f2aaa6dc75e34ec54c951bcb9c", upload-time = "2025-04-22T18:30:20Z" },
 ]
 
 [[package]]

@@ -1,14 +1,13 @@
 
 import time
-import threading
 
+import glfw
 import numpy as np
 import torch
 import mujoco
 import mujoco.viewer
 
 from berkeley_humanoid_lite_lowlevel.policy.config import Cfg
-from berkeley_humanoid_lite_lowlevel.policy.gamepad import Se2Gamepad
 
 
 def quat_rotate_inverse(q: torch.Tensor, v: torch.Tensor) -> torch.Tensor:
@@ -32,16 +31,34 @@ def quat_rotate_inverse(q: torch.Tensor, v: torch.Tensor) -> torch.Tensor:
 class MujocoEnv:
     def __init__(self, cfg: Cfg):
         self.cfg = cfg
+        self.mode = 3.0
+        self.command_velocity_x = 0.0
+        self.command_velocity_y = 0.0
+        self.command_velocity_yaw = 0.0
 
         # Load appropriate MJCF model based on robot configuration
         if cfg.num_joints == 22:
-            self.mj_model = mujoco.MjModel.from_xml_path("source/berkeley_humanoid_lite_assets/data/mjcf/bhl_scene.xml")
+            self.mj_model = mujoco.MjModel.from_xml_path("source/berkeley_humanoid_lite_assets/data/robots/berkeley_humanoid/berkeley_humanoid_lite/mjcf/bhl_scene.xml")
         else:
-            self.mj_model = mujoco.MjModel.from_xml_path("source/berkeley_humanoid_lite_assets/data/mjcf/bhl_biped_scene.xml")
+            self.mj_model = mujoco.MjModel.from_xml_path("source/berkeley_humanoid_lite_assets/data/robots/berkeley_humanoid/berkeley_humanoid_lite/mjcf/bhl_biped_scene.xml")
 
         self.mj_data = mujoco.MjData(self.mj_model)
         self.mj_model.opt.timestep = self.cfg.physics_dt
-        self.mj_viewer = mujoco.viewer.launch_passive(self.mj_model, self.mj_data)
+        self.mj_viewer = mujoco.viewer.launch_passive(
+            self.mj_model, self.mj_data, key_callback=self._on_key
+        )
+        print("Controls: Up/Down = forward/backward, Left/Right = turn, Space = stop")
+
+    def _on_key(self, keycode: int) -> None:
+        command = {
+            glfw.KEY_UP: (0.5, 0.0, 0.0),
+            glfw.KEY_DOWN: (-0.5, 0.0, 0.0),
+            glfw.KEY_LEFT: (0.0, 0.0, 1.0),
+            glfw.KEY_RIGHT: (0.0, 0.0, -1.0),
+            glfw.KEY_SPACE: (0.0, 0.0, 0.0),
+        }.get(keycode)
+        if command is not None:
+            self.command_velocity_x, self.command_velocity_y, self.command_velocity_yaw = command
 
 
 class MujocoVisualizer(MujocoEnv):
@@ -128,17 +145,6 @@ class MujocoSimulator(MujocoEnv):
         print("Policy frequency: ", 1 / self.cfg.policy_dt)
         print("Physics frequency: ", 1 / self.cfg.physics_dt)
         print("Physics substeps: ", self.physics_substeps)
-
-        # Initialize control mode and command variables
-        self.is_killed = threading.Event()
-        self.mode = 3.0  # Default to RL control mode
-        self.command_velocity_x = 0.0
-        self.command_velocity_y = 0.0
-        self.command_velocity_yaw = 0.0
-
-        # Start joystick thread
-        self.command_controller = Se2Gamepad()
-        self.command_controller.run()
 
     def reset(self) -> torch.Tensor:
         """Reset the simulation environment to initial state.
@@ -260,17 +266,6 @@ class MujocoSimulator(MujocoEnv):
             torch.Tensor: Concatenated observation vector containing base orientation,
                          angular velocity, joint positions, velocities, and command state
         """
-        command_mode_switch = self.command_controller.commands["mode_switch"]
-        command_velocity_x = self.command_controller.commands["velocity_x"]
-        command_velocity_y = self.command_controller.commands["velocity_y"]
-        command_velocity_yaw = self.command_controller.commands["velocity_yaw"]
-
-        if command_mode_switch != 0:
-            self.mode = command_mode_switch
-        self.command_velocity_x = command_velocity_x
-        self.command_velocity_y = command_velocity_y * 0.5
-        self.command_velocity_yaw = command_velocity_yaw
-
         return torch.cat([
             self._get_base_quat(),
             self._get_base_ang_vel(),

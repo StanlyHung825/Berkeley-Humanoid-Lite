@@ -15,12 +15,17 @@ services:
       DISPLAY: ${DISPLAY}
       XAUTHORITY: /tmp/.Xauthority
       UV_CACHE_DIR: /workspace/docker/artifacts/uv/cache
-      UV_LINK_MODE: hardlink
+      UV_LINK_MODE: copy
       UV_PYTHON_INSTALL_DIR: /workspace/docker/artifacts/uv/python
+      UV_PROJECT_ENVIRONMENT: /home/ubuntu/.venv/berkeley-humanoid-lite
     stdin_open: true
     tty: true
     volumes:
       - ..:/workspace
+      - berkeley-humanoid-lite-venv:/home/ubuntu/.venv
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
       - ${XAUTHORITY}:/tmp/.Xauthority:ro
     working_dir: /workspace
+
+volumes:
+  berkeley-humanoid-lite-venv:
